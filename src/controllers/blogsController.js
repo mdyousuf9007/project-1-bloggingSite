@@ -99,7 +99,7 @@ const updateBlog = async function (req, res) {
     if (findblog.isDeleted == true)
       return res
         .status(404)
-        .send({ msg: "Blog is already deleted and cannot update " });
+        .send({status:false, msg: "Blog is already deleted and cannot update " });
     //.................middleware passes the control to handler....................
     if (req.validToken.authorId != findblog.authorId)
       return res
@@ -164,13 +164,13 @@ const deleteBlog = async function (req, res) {
     //.................updating the isDeleted key and deletedAt key.................
     let deletes = await blogsModel.findOneAndUpdate(
       { _id: data },
-      { $set: { isDeleted: true, deletedAt: "07/09/2022" } },
+      { $set: { isDeleted: true, deletedAt: moment().format("YYYY-MM-DD")} },
       { new: true }
     );
 
     return res
       .status(200)
-      .send({ status: false, data: "User has been deleted successfully!" });
+      .send({ status: false, msg: "User has been deleted successfully!" });
     //..if there is any error inside in the try block then catch block throws the error
   } catch (error) {
     res.status(500).send({ status: false, msg: error.message });
@@ -228,11 +228,3 @@ module.exports = {
   deleteByQuery,
 };
 
-// const isValidEmail = function (email) {
-//   let checkemail = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
-//   if (checkemail.test(email)) {
-//       return true;
-//   }
-//   return false;
-
-// }
